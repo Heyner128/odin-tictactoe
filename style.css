@@ -1,0 +1,56 @@
+
+body{
+    background-color: rgb(63, 169, 185);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    
+}
+
+#gameBoard {
+    margin-top: 15%;
+    display: grid; 
+    grid-template-columns: repeat(3, 5vw);
+    grid-template-rows: repeat(3, 50px);
+}
+
+#tile1, #tile2, #tile3 {
+    border-top: 0px
+}
+
+#tile7, #tile8, #tile9 {
+    border-bottom: 0px
+}
+
+#tile1, #tile4, #tile7 {
+    border-left: 0px
+}
+
+#tile3, #tile6, #tile9 {
+    border-right: 0px
+}
+
+.tile{
+    border : 3px solid white;
+    color: white;
+    font-size: 20px;
+    font-weight: bolder;
+    margin: 0px;
+    background-color: transparent;
+}
+
+#resetBtn {
+    margin-top: 2%;
+    background-color: transparent;
+    border : 2px solid white;
+    border-radius: 10%;
+    color: white;
+    font-size: 20px;
+}
+
+
+#resetBtn:hover {
+    color: grey;
+    border-color: grey;
+}
+
