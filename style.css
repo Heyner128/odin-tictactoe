@@ -8,10 +8,13 @@ body{
 }
 
 #gameBoard {
+    --board-size : 40vh;
     margin-top: 15%;
+    width: var(--board-size);
+    height: var(--board-size);
     display: grid; 
-    grid-template-columns: repeat(3, 5vw);
-    grid-template-rows: repeat(3, 50px);
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(3, 1fr);
 }
 
 #tile1, #tile2, #tile3 {
@@ -33,19 +36,19 @@ body{
 .tile{
     border : 3px solid white;
     color: white;
-    font-size: 20px;
+    font-size: 6vh;
     font-weight: bolder;
     margin: 0px;
     background-color: transparent;
 }
 
 #resetBtn {
-    margin-top: 2%;
+    margin-top: 5vh;
     background-color: transparent;
     border : 2px solid white;
     border-radius: 10%;
     color: white;
-    font-size: 20px;
+    font-size: 4vh;
 }
 
 
