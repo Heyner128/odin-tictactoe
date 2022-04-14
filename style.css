@@ -37,7 +37,7 @@ body{
 .tile{
     border : 3px solid white;
     color: white;
-    font-size: 4vh;
+    font-size: 5vmin;
     font-weight: bolder;
     margin: 0px;
     background-color: transparent;
@@ -49,11 +49,11 @@ body{
     border : 2px solid white;
     border-radius: 10%;
     color: white;
-    font-size: 2vh;
+    font-size: 3vmin;
 }
 
 
-#resetBtn:hover {
+#resetBtn:active {
     color: grey;
     border-color: grey;
 }
