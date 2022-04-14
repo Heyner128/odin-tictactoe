@@ -37,7 +37,7 @@ body{
 .tile{
     border : 3px solid white;
     color: white;
-    font-size: 6vh;
+    font-size: 4vh;
     font-weight: bolder;
     margin: 0px;
     background-color: transparent;
@@ -49,7 +49,7 @@ body{
     border : 2px solid white;
     border-radius: 10%;
     color: white;
-    font-size: 4vh;
+    font-size: 2vh;
 }
 
 
