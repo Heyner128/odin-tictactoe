@@ -14,6 +14,12 @@ const game = (
             gameBoard.reset();
             DOMController.updateDOM();
             DOMController.addClickHandlers();
+
+            //fix safari error 
+            let vh = window.innerHeight * 0.01;
+            document.documentElement.style.setProperty('--vh', `${vh}px`);
+
+
         }
 
         const declareWinner = function(tiles) {
