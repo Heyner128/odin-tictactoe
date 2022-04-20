@@ -1,8 +1,9 @@
 const game = (
     
     function() {
-        const player1 = Player('X');
-        const player2 = Player('O');
+        //TO SOLVE it can't be two CPUs 
+        const player1 = Player('X', false);
+        const player2 = Player('O', false);
         let playerInTurn;
         let round;
         let ended;
@@ -35,9 +36,20 @@ const game = (
             return isWinner;
 
         }
+
+        const advanceTurn = function() {
+            game.playerInTurn = game.playerInTurn=='1'?'2':'1';
+            game.round++;
+            if(game.declareWinner(gameBoard.tiles)) game.ended=true;
+            DOMController.updateDOM();
+            console.log('turn of player' + game.playerInTurn)
+        }
+
+
         return {
             player1, 
             player2,
+            advanceTurn,
             start,
             ended,
             declareWinner,
@@ -54,12 +66,24 @@ const DOMController = (
             const domSquare = document.querySelectorAll('.tile')
             domSquare.forEach(
                 (element, index) => {
-                    element.addEventListener('click', () => {if(game.playerInTurn=='1') game.player1.move(index)})
+                    element.addEventListener('click', () =>tileClickHandler(index))
                 }
             )
             const resetBtn = document.querySelector('#resetBtn');
             resetBtn.addEventListener('click', () => game.start());
 ;        }
+
+
+        const tileClickHandler = function(tileIndex) {
+            if(game.playerInTurn==1) {
+                game.player1.move(tileIndex);
+                if(game.player2.isCPU) game.player2.move(tileIndex);
+            } else {
+                game.player2.move(tileIndex);
+                if(game.player1.isCPU) game.player1.move(tileIndex);
+
+            }
+        }
 
         const updateDOM = function() {
             gameBoard.tiles.forEach(
@@ -89,10 +113,10 @@ const gameBoard = (
 )();
 
 
-const CPULogic = (function() {
+const CPULogic = (function(CPUSymbol, oponentSymbol) {
     const calculateNextTile = function(tiles) {
         let perTileCalculation = [];
-        let childs = calculateChilds(tiles, 'O');
+        let childs = calculateChilds(tiles, CPUSymbol);
         let childsIndex = 0;
         tiles.forEach(function(tile) {
             if(tile=='') {
@@ -102,7 +126,6 @@ const CPULogic = (function() {
                 perTileCalculation.push(-1*Number.MAX_SAFE_INTEGER);
             }
         })
-        console.log(perTileCalculation);
         return perTileCalculation.findIndex((element) => element ==  Math.max(...perTileCalculation) );
 
     };
@@ -116,15 +139,8 @@ const CPULogic = (function() {
             
             return staticEvaluation(tiles);
         }
-        const childs = calculateChilds(tiles, maximizingPlayer?'O':'X');
-        if(maximizingPlayer) {
-            let maxEval = -1*infinity;
-            
-            childs.forEach(function(child) {
-                maxEval = Math.max(maxEval,minmax(child, depth-1, false));
-            })
-            return maxEval;
-        } else {
+        const childs = calculateChilds(tiles, maximizingPlayer?CPUSymbol:oponentSymbol);
+       if(!maximizingPlayer) {
             let minEval = infinity;
             childs.forEach(function(child) {
                 minEval = Math.min(minEval,minmax(child, depth-1, true));
@@ -148,11 +164,11 @@ const CPULogic = (function() {
     const staticEvaluation = function(tiles) {
         let result = 0;
         for(let tileNo=0;tileNo<3;tileNo++) {
-            result += calculateLine(tiles[tileNo*3],tiles[tileNo*3+1],tiles[tileNo*3+2],'X','O');
-            result += calculateLine(tiles[tileNo],tiles[tileNo+3],tiles[tileNo+6],'X','O');
+            result += calculateLine(tiles[tileNo*3],tiles[tileNo*3+1],tiles[tileNo*3+2],oponentSymbol,CPUSymbol);
+            result += calculateLine(tiles[tileNo],tiles[tileNo+3],tiles[tileNo+6],oponentSymbol,CPUSymbol);
         }
-        result += calculateLine(tiles[0],tiles[4],tiles[8],'X','O');
-        result += calculateLine(tiles[2],tiles[4],tiles[6],'X','O');
+        result += calculateLine(tiles[0],tiles[4],tiles[8],oponentSymbol,CPUSymbol);
+        result += calculateLine(tiles[2],tiles[4],tiles[6],oponentSymbol,CPUSymbol);
         return result;
         
     };
@@ -185,36 +201,23 @@ const CPULogic = (function() {
     }
 
     return {calculateNextTile};
-})()
+})(game.player1.isCPU?game.player1.symbol:game.player2.symbol,!game.player1.isCPU?game.player1.symbol:game.player2.symbol)
 
 
-function Player(symbol) {
+function Player(symbol, isCPU) {
     const move = function(tileNum) {
+        if(isCPU) tileNum = CPULogic.calculateNextTile(gameBoard.tiles);
         if(!game.ended && gameBoard.tiles[tileNum]=='') {
             gameBoard.tiles.splice(tileNum,1,symbol);
-            advanceTurn();
-            moveCPU();
+            game.advanceTurn();
         }
         
     }
 
-    const moveCPU = function() {
-        const tileNum = CPULogic.calculateNextTile(gameBoard.tiles);
-        if(!game.ended && gameBoard.tiles[tileNum]=='') {
-            gameBoard.tiles.splice(tileNum,1,'O');
-            advanceTurn();
-        }
-    }
 
-    const advanceTurn = function() {
-        game.playerInTurn = game.playerInTurn=='1'?'2':'1';
-        game.round++;
-        if(game.declareWinner(gameBoard.tiles)) game.ended=true;
-        DOMController.updateDOM();
-        console.log('turn of player' + game.playerInTurn)
-    }
+    
     return {
-        move
+        move, symbol, isCPU
     };
 }
 

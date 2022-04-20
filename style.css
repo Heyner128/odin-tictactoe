@@ -47,9 +47,9 @@ body{
     margin-top: 5vh;
     background-color: transparent;
     border : 2px solid white;
-    border-radius: 10%;
+    border-radius: 10px;
     color: white;
-    font-size: 3vmin;
+    font-size: 1.5em;
 }
 
 
