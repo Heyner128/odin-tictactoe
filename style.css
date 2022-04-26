@@ -2,17 +2,33 @@
 body{
     background-color: rgb(63, 169, 185);
     display: flex;
+    font-family: "Kanit";
+    color:  white;
     flex-direction: column;
     align-items: center;
     height: 100vh; /* Fallback for browsers that do not support Custom Properties */
     height: calc(var(--vh, 1vh) * 100);
 }
 
+
+#container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top : 12%;
+}
+
+#title {
+    font-size: 1.5em;
+    text-align: center;
+}
+
+
 #gameBoard {
     --board-size : 40vh;
-    margin-top: 15%;
     width: var(--board-size);
     height: var(--board-size);
+    margin-top: 5vh;
     display: grid; 
     grid-template-columns: repeat(3, 1fr);
     grid-template-rows: repeat(3, 1fr);
@@ -36,19 +52,20 @@ body{
 
 .tile{
     border : 3px solid white;
-    color: white;
     font-size: 5vmin;
     font-weight: bolder;
+    color: inherit;
     margin: 0px;
     background-color: transparent;
 }
 
 #resetBtn {
-    margin-top: 5vh;
     background-color: transparent;
     border : 2px solid white;
+    color : inherit;
+    font-family: inherit;
     border-radius: 10px;
-    color: white;
+    margin-top: 5vh;
     font-size: 1.5em;
 }
 

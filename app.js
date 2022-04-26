@@ -3,7 +3,7 @@ const game = (
     function() {
         //TO SOLVE it can't be two CPUs 
         const player1 = Player('X', false);
-        const player2 = Player('O', false);
+        const player2 = Player('O', true);
         let playerInTurn;
         let round;
         let ended;
@@ -15,12 +15,19 @@ const game = (
             gameBoard.reset();
             DOMController.updateDOM();
             DOMController.addClickHandlers();
-
             //fix safari error 
             let vh = window.innerHeight * 0.01;
             document.documentElement.style.setProperty('--vh', `${vh}px`);
 
 
+        }
+
+        const reset = function() {
+            this.playerInTurn='1';
+            this.round=0;
+            this.ended=false;
+            gameBoard.reset();
+            DOMController.updateDOM();
         }
 
         const declareWinner = function(tiles) {
@@ -51,6 +58,7 @@ const game = (
             player2,
             advanceTurn,
             start,
+            reset,
             ended,
             declareWinner,
             round,
@@ -66,21 +74,21 @@ const DOMController = (
             const domSquare = document.querySelectorAll('.tile')
             domSquare.forEach(
                 (element, index) => {
-                    element.addEventListener('click', () =>tileClickHandler(index))
+                    element.addEventListener('click',() =>  tileClickHandler(index));
                 }
             )
             const resetBtn = document.querySelector('#resetBtn');
-            resetBtn.addEventListener('click', () => game.start());
+            resetBtn.addEventListener('click',() => game.reset());
 ;        }
 
 
         const tileClickHandler = function(tileIndex) {
             if(game.playerInTurn==1) {
                 game.player1.move(tileIndex);
-                if(game.player2.isCPU) game.player2.move(tileIndex);
+                if(game.player2.isCPU && game.playerInTurn==2) game.player2.move(tileIndex);
             } else {
                 game.player2.move(tileIndex);
-                if(game.player1.isCPU) game.player1.move(tileIndex);
+                if(game.player1.isCPU && game.playerInTurn==1) game.player1.move(tileIndex);
 
             }
         }
@@ -129,8 +137,6 @@ const CPULogic = (function(CPUSymbol, oponentSymbol) {
         return perTileCalculation.findIndex((element) => element ==  Math.max(...perTileCalculation) );
 
     };
-
-
 
     const minmax = function(tiles, depth, maximizingPlayer) {
         const infinity = Number.MAX_SAFE_INTEGER;
