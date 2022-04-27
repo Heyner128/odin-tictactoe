@@ -32,22 +32,33 @@ const game = (
 
         const declareWinner = function(tiles) {
             let isWinner = false;
+            let symbol = '';
             for(let tileNo=0;tileNo<3;tileNo++) {
                 isWinner ||= tiles[tileNo*3]==tiles[tileNo*3+1] && tiles[tileNo*3+1]==tiles[tileNo*3+2] && tiles[tileNo*3]!='';
+                if(isWinner) symbol+=tiles[tileNo*3];
                 isWinner ||= tiles[tileNo]==tiles[tileNo+3] && tiles[tileNo+3]==tiles[tileNo+6] && tiles[tileNo]!='';
+                if(isWinner) symbol+=tiles[tileNo];
             }
 
             isWinner ||= tiles[0]==tiles[4] && tiles[4]==tiles[8]  && tiles[0]!='';
+            if(isWinner) symbol+=tiles[0];
             isWinner ||= tiles[2]==tiles[4] && tiles[4]==tiles[6] && tiles[2]!='';
-
-            return isWinner;
+            if(isWinner) symbol+=tiles[2];
+            return symbol;
 
         }
 
         const advanceTurn = function() {
             game.playerInTurn = game.playerInTurn=='1'?'2':'1';
             game.round++;
-            if(game.declareWinner(gameBoard.tiles)) game.ended=true;
+            const winner  = game.declareWinner(gameBoard.tiles);
+            console.log(winner);
+            if(winner!='') {
+                console.log('game ended');
+                game.ended=true;
+                if(winner==player1.symbol) player1.wins++;
+                if(winner==player2.symbol) player2.wins++;
+            }
             DOMController.updateDOM();
             console.log('turn of player' + game.playerInTurn)
         }
@@ -99,6 +110,11 @@ const DOMController = (
                     document.querySelector('#tile'+(index+1)).innerHTML = element;
                 }
             );
+            //TO SOLVE 
+            document.querySelector('#winsPlayer').innerHTML = game.player1.wins;
+            document.querySelector('#winsCPU').innerHTML = game.player2.wins;
+            // TO SOLVE
+
         }
 
         return {addClickHandlers, updateDOM};
@@ -141,7 +157,7 @@ const CPULogic = (function(CPUSymbol, oponentSymbol) {
     const minmax = function(tiles, depth, maximizingPlayer) {
         const infinity = Number.MAX_SAFE_INTEGER;
         
-        if(depth==0 || game.declareWinner(tiles)) {
+        if(depth==0 || game.declareWinner(tiles)!='') {
             
             return staticEvaluation(tiles);
         }
@@ -220,10 +236,11 @@ function Player(symbol, isCPU) {
         
     }
 
+    const wins = 0;
 
     
     return {
-        move, symbol, isCPU
+        move, symbol, isCPU, wins
     };
 }
 
