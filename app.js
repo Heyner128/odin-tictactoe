@@ -31,19 +31,17 @@ const game = (
         }
 
         const declareWinner = function(tiles) {
-            let isWinner = false;
             let symbol = '';
             for(let tileNo=0;tileNo<3;tileNo++) {
-                isWinner ||= tiles[tileNo*3]==tiles[tileNo*3+1] && tiles[tileNo*3+1]==tiles[tileNo*3+2] && tiles[tileNo*3]!='';
-                if(isWinner) symbol+=tiles[tileNo*3];
-                isWinner ||= tiles[tileNo]==tiles[tileNo+3] && tiles[tileNo+3]==tiles[tileNo+6] && tiles[tileNo]!='';
-                if(isWinner) symbol+=tiles[tileNo];
+                const lineH = tiles[tileNo*3]==tiles[tileNo*3+1] && tiles[tileNo*3+1]==tiles[tileNo*3+2] && tiles[tileNo*3]!=''
+                if(lineH) symbol=tiles[tileNo*3];
+                const lineV = tiles[tileNo]==tiles[tileNo+3] && tiles[tileNo+3]==tiles[tileNo+6] && tiles[tileNo]!='';
+                if(lineV) symbol=tiles[tileNo];
             }
-
-            isWinner ||= tiles[0]==tiles[4] && tiles[4]==tiles[8]  && tiles[0]!='';
-            if(isWinner) symbol+=tiles[0];
-            isWinner ||= tiles[2]==tiles[4] && tiles[4]==tiles[6] && tiles[2]!='';
-            if(isWinner) symbol+=tiles[2];
+            const lineD = tiles[0]==tiles[4] && tiles[4]==tiles[8]  && tiles[0]!='';
+            if(lineD) symbol=tiles[0];
+            const lineDR = tiles[2]==tiles[4] && tiles[4]==tiles[6] && tiles[2]!='';
+            if(lineDR) symbol=tiles[2];
             return symbol;
 
         }
